@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Modal from "."
 import { useAppDispatch } from "../../redux/app/hooks"
-import { removeTodo, TodoTypes, updateTodo } from "../../redux/features/todo/todoSlices"
+import { addTodo, removeTodo, TodoTypes, updateTodo } from "../../redux/features/todo/todoSlices"
 import Switch from "../Switch"
 import { ModalHeader, ModalBody } from "./styledComponent"
 
@@ -32,26 +32,29 @@ const ModalUpdateTodo : React.FC<UpdatesTodo> = ({popUp,setPopUp,todo}) => {
         if(!todo) return
 
         dispatch(removeTodo(todo.id))
+        setPopUp(false)
     }
 
     const handleAdd = () => {
-        
+        dispatch(addTodo({title: titleTodo, description: descriptions}))
+        setPopUp(false)
     }
 
     const handleChange = (value: string, type: 'title' | 'desc') => {
-        if(!todo) return () => {
+        if(!todo) {
             switch(type){
                 case 'title' : setTitleTodo(value)
                     break
                 case 'desc' : setDescription(value)
             }
+        } else{
+            switch(type){
+                case 'title' : if(todo.title !== value) setTitleTodo(value)
+                    break
+                case 'desc' : if(todo.description !== value) setDescription(value)
+            }
         }
 
-        switch(type){
-            case 'title' : if(todo.title !== value) setTitleTodo(value)
-                break
-            case 'desc' : if(todo.description !== value) setDescription(value)
-        }
     }
     return (
         <>
@@ -59,7 +62,7 @@ const ModalUpdateTodo : React.FC<UpdatesTodo> = ({popUp,setPopUp,todo}) => {
             <ModalHeader>
                 <label htmlFor="todo">Todo</label>
                 <input id="todo" value={titleTodo} onChange={(e) => handleChange(e.target.value, 'title')} />
-                <p> Created at : {todo?.createdAt}</p>
+                {todo? <p> Created at : {todo?.createdAt}</p> : ''}
                 {/* <CloseIcon /> */}
             </ModalHeader>
             <ModalBody>
@@ -67,11 +70,11 @@ const ModalUpdateTodo : React.FC<UpdatesTodo> = ({popUp,setPopUp,todo}) => {
                 <textarea id="desc" style={{resize: 'none'}} value={descriptions} onChange={(e) => handleChange(e.target.value, 'desc')}>
 
                 </textarea>
-                <Switch title="Status (Unfinished / Finished)" value={status} setValue={setStatus} />
+                {todo? <Switch title="Status (Unfinished / Finished)" value={status} setValue={setStatus} /> : ''}
 
                 {!todo?.id ? <button onClick={() => handleAdd()}> Add Todo </button> : <>
                     <button onClick={() => handleSave()}> Save Changes </button>
-                    {todo.status !== 1 && <button onClick={() => handleDelete()}> Delete </button>}
+                    {todo.status !== 1 && <button style={{backgroundColor: '#fd4548'}} onClick={() => handleDelete()}> Delete </button>}
                 </>}
 
             </ModalBody>

@@ -10,7 +10,8 @@ export const ListTodoContainer = styled.div`
 export const ContentColumn = styled.div`
     display: flex;
     flex-flow: column nowrap;
-
+    gap: 2em;
+    
     flex: 1;
 
     h3{

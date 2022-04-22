@@ -17,3 +17,17 @@ code {
   margin: 0;
   box-sizing: border-box;
 }
+
+button{
+  padding: 4px 8px;
+  background-color: #00ADB5;
+  border: none;
+  border-radius: 4px;
+  color: white;
+
+  cursor: pointer;
+}
+
+input{
+  padding: 4px 8px;
+}
